@@ -3,13 +3,14 @@ package com.study.profile_stack_api.domain.profile.entity;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 public class Profile {
     private Long id;
     private String name;
     private String email;
     private String bio;
-    private String position;
+    private Position position;
     private int careerYears;
     private String githubUrl;
     private String blogUrl;
@@ -18,7 +19,7 @@ public class Profile {
 
     public Profile() {}
 
-    public Profile(Long id, String name, String email, String bio, String position, int careerYears,
+    public Profile(Long id, String name, String email, String bio, Position position, int careerYears,
                    String githubUrl, String blogUrl, LocalDate createdAt, LocalDate updatedAt) {
         this.id = id;
         this.name = name;
@@ -48,7 +49,7 @@ public class Profile {
         return bio;
     }
 
-    public String getPosition() {
+    public Position getPosition() {
         return position;
     }
 

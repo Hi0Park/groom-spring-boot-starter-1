@@ -17,4 +17,12 @@ public enum Position {
         this.icon = icon;
         this.description = description;
     }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }
