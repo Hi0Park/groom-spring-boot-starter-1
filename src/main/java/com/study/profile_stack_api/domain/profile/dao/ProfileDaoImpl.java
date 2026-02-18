@@ -4,10 +4,16 @@ import com.study.profile_stack_api.domain.profile.entity.Position;
 import com.study.profile_stack_api.domain.profile.entity.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
+
+
 
 @Repository
 public class ProfileDaoImpl implements ProfileDao {
@@ -18,7 +24,32 @@ public class ProfileDaoImpl implements ProfileDao {
 
     @Override
     public Profile save(Profile profile) {
-        return null;
+        String sql = """
+                insert into profile
+                (name, email, bio, position, career_years, github_url, blog_url)
+                values (?, ?, ?, ?, ?, ?, ?)
+                """;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, profile.getName());
+            ps.setString(2, profile.getEmail());
+            ps.setString(3, profile.getBio());
+            ps.setString(4, profile.getPosition().name());
+            ps.setInt(5, profile.getCareerYears());
+            ps.setString(6, profile.getGithubUrl());
+            ps.setString(7, profile.getBlogUrl());
+            return ps;
+        }, keyHolder);
+
+        Number generatedId = keyHolder.getKey();
+
+        if(generatedId != null) {
+            profile.setId(generatedId.longValue());
+        }
+
+        return profile;
     }
 
     @Override

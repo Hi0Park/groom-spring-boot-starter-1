@@ -5,6 +5,8 @@ import com.study.profile_stack_api.domain.profile.entity.Profile;
 import java.util.List;
 import java.util.Optional;
 
+// DAO 인터페이스
+
 public interface ProfileDao {
     // Create
     Profile save(Profile profile);

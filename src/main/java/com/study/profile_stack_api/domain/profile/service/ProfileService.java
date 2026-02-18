@@ -18,8 +18,8 @@ public class ProfileService {
 
     // Create
     public ProfileResponse createProfile(ProfileCreateRequest request) {
-        // validation
-
+        // TODO : validation 추가
+        validationCreateRequest(request);
 
         Profile profile = new Profile(
                 null,
@@ -62,4 +62,24 @@ public class ProfileService {
                 .map(ProfileResponse::from)
                 .collect(Collectors.toList());
     }
+
+
+    // validation
+    public void validationCreateRequest(ProfileCreateRequest request) {
+        if (request.getName() == null || request.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("이름은 공백일 수 없습니다.");
+        }
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일은 공백일 수 없습니다.");
+        }
+        if (request.getPosition() == null || request.getPosition().trim().isEmpty()) {
+            throw new IllegalArgumentException("직무는 공백일 수 없습니다.");
+        }
+        if (request.getCareerYears() < 0 || request.getCareerYears() > 100) {
+            throw new IllegalArgumentException("올바른 경력 연차를 입력해주세요.");
+        }
+    }
+
+
+
 }
