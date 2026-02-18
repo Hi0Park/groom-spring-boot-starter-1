@@ -219,7 +219,7 @@ curl -X POST http://localhost:8080/api/v1/profiles/1/tech-stacks \
 
 ### Phase 3: Profile CRUD
 - [x] Profile Entity 및 Enum 구현
-- [ ] Profile DTO 구현 -> C, U, D 미구현
+- [ ] Profile DTO 구현 -> Delete 미구현
 - [x] ProfileDao 인터페이스 및 구현체
 - [ ] ProfileRepository 구현 -> 현재는 DAO가 대체 중
 - [x] ProfileService 구현
