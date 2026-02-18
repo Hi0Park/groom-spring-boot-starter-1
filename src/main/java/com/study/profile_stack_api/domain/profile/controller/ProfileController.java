@@ -25,4 +25,16 @@ public class ProfileController {
         return profileService.getAllProfiles();
     }
 
+    @GetMapping("/{id}")
+    public ProfileResponse getProfileById(
+            @PathVariable Long id ) {
+        return profileService.getProfilesById(id);
+    }
+
+    @GetMapping("/position/{position}")
+    public List<ProfileResponse> getProfilesByPosition(
+            @PathVariable String position) {
+        return profileService.getProfilesByPosition(position);
+    }
+
 }

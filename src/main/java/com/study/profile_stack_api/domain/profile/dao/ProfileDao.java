@@ -3,6 +3,7 @@ package com.study.profile_stack_api.domain.profile.dao;
 import com.study.profile_stack_api.domain.profile.entity.Profile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProfileDao {
     // Create
@@ -10,7 +11,7 @@ public interface ProfileDao {
 
     // Read
     List<Profile> findAll();
-    List<Profile> fineById(Long id);
+    Optional<Profile> fineById(Long id);
     List<Profile> findByPosition(String position);
 
     // Update

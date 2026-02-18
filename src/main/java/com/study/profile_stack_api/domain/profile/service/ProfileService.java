@@ -47,12 +47,11 @@ public class ProfileService {
     }
 
     // getById
-    public List<ProfileResponse> getProfilesById(Long id) {
-        List<Profile> profiles = profileDao.fineById(id);
+    public ProfileResponse getProfilesById(Long id) {
+        Profile profile = profileDao.fineById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID : " + id));
 
-        return profiles.stream()
-                .map(ProfileResponse::from)
-                .collect(Collectors.toList());
+        return ProfileResponse.from(profile);
     }
 
     // getByPosition

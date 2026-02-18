@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProfileDaoImpl implements ProfileDao {
@@ -28,13 +29,29 @@ public class ProfileDaoImpl implements ProfileDao {
     }
 
     @Override
-    public List<Profile> fineById(Long id) {
-        return List.of();
+    public Optional<Profile> fineById(Long id) {
+        String sql = """
+                select *
+                from profile
+                where id = ?
+                """;
+        try {
+            Profile profile = jdbcTemplate.queryForObject(sql, profileRowMapper, id);
+            return Optional.ofNullable(profile);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Profile> findByPosition(String position) {
-        return List.of();
+        String sql = """
+                select *
+                from profile
+                where position = ?
+                """;
+
+        return jdbcTemplate.query(sql, profileRowMapper, position);
     }
 
     @Override
