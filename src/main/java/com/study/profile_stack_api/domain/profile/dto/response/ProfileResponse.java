@@ -3,6 +3,7 @@ package com.study.profile_stack_api.domain.profile.dto.response;
 import com.study.profile_stack_api.domain.profile.entity.Profile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ProfileResponse {
     private Long id;
@@ -14,10 +15,10 @@ public class ProfileResponse {
     private int careerYears;
     private String githubUrl;
     private String blogUrl;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public ProfileResponse from(Profile profile) {
+    public static ProfileResponse from(Profile profile) {
         ProfileResponse response = new ProfileResponse();
 
         response.id = profile.getId();
@@ -73,11 +74,11 @@ public class ProfileResponse {
         return blogUrl;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 }
