@@ -113,7 +113,17 @@ public class ProfileDaoImpl implements ProfileDao {
 
     @Override
     public boolean deleteById(Long id) {
-        return false;
+        String sql = "delete from profile where id = ?";
+        int deleted = jdbcTemplate.update(sql, id);
+        return deleted > 0;
+    }
+
+    @Override
+    public boolean existById(Long id) {
+        String sql = "select count(*) from profile where id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+
+        return count != null && count > 0;
     }
 
     private final RowMapper<Profile> profileRowMapper = (rs, rowNum) -> {

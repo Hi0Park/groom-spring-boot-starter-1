@@ -22,6 +22,8 @@ public interface ProfileDao {
     // Delete
     boolean deleteById(Long id);
 
+    boolean existById(Long id);
+
     // Paging
     // TODO : Paging 구현
 }

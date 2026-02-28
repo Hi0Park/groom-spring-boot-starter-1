@@ -7,31 +7,46 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Profile {
     private Long id;
     private String name;
     private String email;
     private String bio;
     private Position position;
-    private int careerYears;
+    private Integer careerYears;
     private String githubUrl;
     private String blogUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @Builder
-    public Profile(Long id, String name, String email, String bio, Position position, int careerYears,
-                   String githubUrl, String blogUrl) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.bio = bio;
-        this.position = position;
-        this.careerYears = careerYears;
-        this.githubUrl = githubUrl;
-        this.blogUrl = blogUrl;
-        this.createdAt = LocalDateTime.now();
+    public void update(String name, String email, Position position,
+                       Integer careerYears, String githubUrl, String blogUrl) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (email != null) {
+            this.email = email;
+        }
+        if (bio != null) {
+            this.bio = bio;
+        }
+        if (position != null) {
+            this.position = position;
+        }
+        if (careerYears != null) {
+            this.careerYears = careerYears;
+        }
+        if (githubUrl != null) {
+            this.githubUrl = githubUrl;
+        }
+        if (blogUrl != null) {
+            this.blogUrl = blogUrl;
+        }
+
         this.updatedAt = LocalDateTime.now();
     }
-
 }

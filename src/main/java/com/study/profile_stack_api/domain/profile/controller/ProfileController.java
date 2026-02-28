@@ -2,6 +2,7 @@ package com.study.profile_stack_api.domain.profile.controller;
 
 import com.study.profile_stack_api.domain.profile.dto.request.ProfileCreateRequest;
 import com.study.profile_stack_api.domain.profile.dto.request.ProfileUpdateRequest;
+import com.study.profile_stack_api.domain.profile.dto.response.ProfileDeleteResponse;
 import com.study.profile_stack_api.domain.profile.dto.response.ProfileResponse;
 import com.study.profile_stack_api.domain.profile.service.ProfileService;
 import com.study.profile_stack_api.global.common.ApiResponse;
@@ -18,8 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class ProfileController {
-
-    // 의존성 주입
     private final ProfileService profileService;
 
     // Create
@@ -61,10 +60,21 @@ public class ProfileController {
             @PathVariable Long id,
             @RequestBody ProfileUpdateRequest request) {
 
+        ProfileResponse response = profileService.updateProfile(id, request);
 
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(response));
     }
 
     // Delete
-    //@DeleteMapping
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProfileDeleteResponse>> deleteProfile(
+            @PathVariable Long id ) {
+
+        ProfileDeleteResponse response = profileService.deleteProfile(id);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(response));
+    }
 
 }
