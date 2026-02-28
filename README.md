@@ -211,17 +211,16 @@ curl -X POST http://localhost:8080/api/v1/profiles/1/tech-stacks \
 - [x] MySQL 연결 확인
 
 ### Phase 2: 공통 모듈
-- [ ] ApiResponse 클래스 구현
+- [x] ApiResponse 클래스 구현
 - [ ] Page 클래스 구현
 - [ ] BusinessException 및 하위 예외 클래스 구현
 - [ ] GlobalExceptionHandler 구현
-- -> 아직 공통 응답 등은 배우지 않았기 때문에.. Exception이나 Page 클래스만 구현하기.
 
 ### Phase 3: Profile CRUD
 - [x] Profile Entity 및 Enum 구현
-- [ ] Profile DTO 구현 -> Delete 미구현
+- [x] Profile DTO 구현
 - [x] ProfileDao 인터페이스 및 구현체
-- [ ] ProfileRepository 구현 -> 현재는 DAO가 대체 중
+- [x] ProfileRepository 구현 -> 현재는 DAO가 대체 중
 - [x] ProfileService 구현
 - [x] ProfileController 구현
 
