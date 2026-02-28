@@ -2,23 +2,24 @@ package com.study.profile_stack_api.domain.profile.service;
 
 import com.study.profile_stack_api.domain.profile.dao.ProfileDao;
 import com.study.profile_stack_api.domain.profile.dto.request.ProfileCreateRequest;
+import com.study.profile_stack_api.domain.profile.dto.request.ProfileUpdateRequest;
 import com.study.profile_stack_api.domain.profile.dto.response.ProfileResponse;
 import com.study.profile_stack_api.domain.profile.entity.Position;
 import com.study.profile_stack_api.domain.profile.entity.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
     private ProfileDao profileDao;
 
-    public ProfileService(ProfileDao profileDao) {this.profileDao = profileDao;}
+    public ProfileService(ProfileDao profileDao) { this.profileDao = profileDao; }
 
     // Create
     public ProfileResponse createProfile(ProfileCreateRequest request) {
-        // TODO : validation 추가
         validationCreateRequest(request);
 
         Profile profile = new Profile(
@@ -48,7 +49,7 @@ public class ProfileService {
 
     // getById
     public ProfileResponse getProfilesById(Long id) {
-        Profile profile = profileDao.fineById(id)
+        Profile profile = profileDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID : " + id));
 
         return ProfileResponse.from(profile);
@@ -61,6 +62,12 @@ public class ProfileService {
         return profiles.stream()
                 .map(ProfileResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    // Update
+    public ProfileResponse updateProfile(Long id, ProfileUpdateRequest request) {
+        //Objects.requireNonNull()
+        return null;
     }
 
 

@@ -13,7 +13,7 @@ public interface ProfileDao {
 
     // Read
     List<Profile> findAll();
-    Optional<Profile> fineById(Long id);
+    Optional<Profile> findById(Long id);
     List<Profile> findByPosition(String position);
 
     // Update

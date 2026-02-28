@@ -60,7 +60,7 @@ public class ProfileDaoImpl implements ProfileDao {
     }
 
     @Override
-    public Optional<Profile> fineById(Long id) {
+    public Optional<Profile> findById(Long id) {
         String sql = """
                 select *
                 from profile
@@ -87,7 +87,28 @@ public class ProfileDaoImpl implements ProfileDao {
 
     @Override
     public Profile update(Profile profile) {
-        return null;
+        String sql = """
+                update profile
+                set name = ?, email = ?, bio = ?,
+                position = ?, career_years = ?,
+                github_url = ?, blog_url = ?
+                where id = ?
+                """;
+        int updated = jdbcTemplate.update(sql,
+                profile.getName(),
+                profile.getEmail(),
+                profile.getBio(),
+                profile.getPosition().name(),
+                profile.getCareerYears(),
+                profile.getGithubUrl(),
+                profile.getBlogUrl(),
+                profile.getId());
+
+        if (updated == 0) {
+            throw new RuntimeException("Profile not found: " + profile.getId());
+        }
+
+        return profile;
     }
 
     @Override
