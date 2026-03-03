@@ -213,8 +213,8 @@ curl -X POST http://localhost:8080/api/v1/profiles/1/tech-stacks \
 ### Phase 2: 공통 모듈
 - [x] ApiResponse 클래스 구현
 - [ ] Page 클래스 구현
-- [ ] BusinessException 및 하위 예외 클래스 구현
-- [ ] GlobalExceptionHandler 구현
+- [x] BusinessException 및 하위 예외 클래스 구현
+- [x] GlobalExceptionHandler 구현
 
 ### Phase 3: Profile CRUD
 - [x] Profile Entity 및 Enum 구현

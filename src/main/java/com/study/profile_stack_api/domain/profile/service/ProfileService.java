@@ -7,7 +7,7 @@ import com.study.profile_stack_api.domain.profile.dto.response.ProfileDeleteResp
 import com.study.profile_stack_api.domain.profile.dto.response.ProfileResponse;
 import com.study.profile_stack_api.domain.profile.entity.Position;
 import com.study.profile_stack_api.domain.profile.entity.Profile;
-import com.study.profile_stack_api.domain.profile.exception.ProfileNotFoundException;
+import com.study.profile_stack_api.domain.profile.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -104,7 +104,7 @@ public class ProfileService {
     // Delete
     public ProfileDeleteResponse deleteProfile(Long id) {
         if (!profileDao.existById(id)) {
-            throw new ProfileNotFoundException(id);
+            throw new ResourceNotFoundException(id);
         }
 
         profileDao.deleteById(id);
