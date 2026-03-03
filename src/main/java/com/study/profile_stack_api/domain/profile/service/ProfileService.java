@@ -91,6 +91,7 @@ public class ProfileService {
         profile.update(
                 request.getName(),
                 request.getEmail(),
+                request.getBio(),
                 Position.valueOf(request.getPosition()),
                 request.getCareerYears(),
                 request.getGithubUrl(),

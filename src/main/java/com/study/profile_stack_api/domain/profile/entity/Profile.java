@@ -24,7 +24,7 @@ public class Profile {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    public void update(String name, String email, Position position,
+    public void update(String name, String email, String bio, Position position,
                        Integer careerYears, String githubUrl, String blogUrl) {
         if (name != null) {
             this.name = name;
