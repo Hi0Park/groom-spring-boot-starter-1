@@ -66,12 +66,11 @@ public class TechStackDaoImpl implements TechStackDao{
     }
 
     @Override
-    public Optional<TechStack> findTechStackById(Long profileId, Long id) {
+    public Optional<TechStack> findTechStackById(Long profileId ,Long id) {
         String sql = """
                 select *
                 from tech_stack
-                where profile_id = ?
-                and id = ?
+                where id = ?
                 """;
 
         try {
@@ -83,8 +82,49 @@ public class TechStackDaoImpl implements TechStackDao{
     }
 
     @Override
-    public TechStackDao update(TechStack techStack) {
-        return null;
+    public TechStack update(TechStack techStack) {
+        // TODO: RowNumber 적용하는 방법을 알아내고 수정할 것
+        // 일단 임시로 ID를 이용하게끔 설정
+        String sql = """
+                update tech_stack
+                set name = ?, category = ?, proficiency = ?,
+                years_of_exp = ?
+                where id = ?
+                """;
+
+        int updated = jdbcTemplate.update(sql,
+                techStack.getName(),
+                techStack.getCategory().name(),
+                techStack.getProficiency().name(),
+                techStack.getYearsOfExp());
+
+        if (updated == 0) {
+            throw new RuntimeException("TechStack not found: " + techStack.getId());
+        }
+        return techStack;
+    }
+
+    @Override
+    public boolean exitsById(Long id) {
+        String sql = """
+                select count(*)
+                from tech_stack
+                where id = ?
+                """;
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        String sql = """
+                delete 
+                from tech_stack
+                where id = ?
+                """;
+        int deleted = jdbcTemplate.update(sql, id);
+        return deleted > 0;
     }
 
     public RowMapper<TechStack> techStackRowMapper = (rs, rowNum) -> {

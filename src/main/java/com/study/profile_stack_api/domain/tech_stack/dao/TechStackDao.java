@@ -10,7 +10,11 @@ public interface TechStackDao {
 
     List<TechStack> findAll(Long profileId);
 
-    Optional<TechStack> findTechStackById(Long profileId, Long id);
+    Optional<TechStack> findTechStackById(Long profileId ,Long id);
 
-    TechStackDao update(TechStack techStack);
+    TechStack update(TechStack techStack);
+
+    boolean exitsById(Long id);
+
+    boolean deleteById(Long id);
 }

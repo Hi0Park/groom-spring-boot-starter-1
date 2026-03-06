@@ -12,12 +12,12 @@ public class TechStackUpdateRequest {
     private String name;
     private String category;
     private String proficiency;
-    private Integer yearOfExp;
+    private Integer yearsOfExp;
 
     public boolean hasNoUpdates() {
         return name == null &&
                 category == null &&
                 proficiency == null &&
-                yearOfExp == null;
+                yearsOfExp == null;
     }
 }

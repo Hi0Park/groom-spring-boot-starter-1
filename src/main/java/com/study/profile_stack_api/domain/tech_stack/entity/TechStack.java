@@ -21,4 +21,21 @@ public class TechStack {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    public void update(String name, Category category,
+                       Proficiency proficiency, Integer yearsOfExp) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (category != null) {
+            this.category = category;
+        }
+        if (proficiency != null) {
+            this.proficiency = proficiency;
+        }
+        if (yearsOfExp != null) {
+            this.yearsOfExp = yearsOfExp;
+        }
+
+        this.updatedAt = LocalDateTime.now();
+    }
 }

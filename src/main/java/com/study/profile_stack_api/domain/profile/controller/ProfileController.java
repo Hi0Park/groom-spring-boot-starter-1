@@ -21,7 +21,6 @@ import java.util.List;
 public class ProfileController {
     private final ProfileService profileService;
 
-    // Create
     @PostMapping
     public ResponseEntity<ApiResponse<ProfileResponse>> createProfile(@RequestBody ProfileCreateRequest request) {
         ProfileResponse profileResponse = profileService.createProfile(request); // service의 create 구현
@@ -29,7 +28,6 @@ public class ProfileController {
                 .body(ApiResponse.success(profileResponse));
     }
 
-    // Read
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProfileResponse>>> getAllProfiles() {
         List<ProfileResponse> profileResponses = profileService.getAllProfiles();
@@ -54,7 +52,6 @@ public class ProfileController {
                 .body(ApiResponse.success(profileResponses));
     }
 
-    // Update
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ProfileResponse>> updateProfile(
             @PathVariable Long id,
@@ -66,7 +63,6 @@ public class ProfileController {
                 .body(ApiResponse.success(response));
     }
 
-    // Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<ProfileDeleteResponse>> deleteProfile(
             @PathVariable Long id ) {

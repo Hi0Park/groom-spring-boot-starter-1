@@ -1,6 +1,8 @@
 package com.study.profile_stack_api.domain.tech_stack.controller;
 
 import com.study.profile_stack_api.domain.tech_stack.dto.request.TechStackCreateRequest;
+import com.study.profile_stack_api.domain.tech_stack.dto.request.TechStackUpdateRequest;
+import com.study.profile_stack_api.domain.tech_stack.dto.response.TechStackDeleteResponse;
 import com.study.profile_stack_api.domain.tech_stack.dto.response.TechStackResponse;
 import com.study.profile_stack_api.domain.tech_stack.service.TechStackService;
 import com.study.profile_stack_api.global.common.ApiResponse;
@@ -43,6 +45,27 @@ public class TechStackController {
             @PathVariable Long profileId,
             @PathVariable Long id ) {
         TechStackResponse response = techStackService.getTechStackById(profileId, id);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(response));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<TechStackResponse>> updateTechStack(
+            @PathVariable Long id,
+            @PathVariable Long profileId,
+            @RequestBody TechStackUpdateRequest request) {
+        TechStackResponse response = techStackService.updateTechStack(id, profileId, request);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(response));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<TechStackDeleteResponse>> deleteTechStack(
+            @PathVariable Long id,
+            @PathVariable Long profileId) {
+        TechStackDeleteResponse response = techStackService.deleteTechStack(id, profileId);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.success(response));

@@ -225,12 +225,12 @@ curl -X POST http://localhost:8080/api/v1/profiles/1/tech-stacks \
 - [x] ProfileController 구현
 
 ### Phase 4: TechStack CRUD
-- [ ] TechStack Entity 및 Enum 구현
-- [ ] TechStack DTO 구현
-- [ ] TechStackDao 인터페이스 및 구현체
-- [ ] TechStackRepository 구현
-- [ ] TechStackService 구현
-- [ ] TechStackController 구현
+- [x] TechStack Entity 및 Enum 구현
+- [x] TechStack DTO 구현
+- [x] TechStackDao 인터페이스 및 구현체
+- [x] TechStackRepository 구현 -> TechStackDao로 대체
+- [x] TechStackService 구현
+- [x] TechStackController 구현
 
 ### Phase 5: 페이징 & 검색
 - [ ] 프로필 페이징 구현
