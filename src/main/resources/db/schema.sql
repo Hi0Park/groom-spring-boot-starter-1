@@ -15,7 +15,7 @@ create table if not exists profile (
     github_url varchar(200) comment 'GitHub URL',
     blog_url varchar(200) comment '블로그 URL',
     created_at timestamp default current_timestamp comment '생성일시',
-    updated_at timestamp default current_timestamp comment '수정일시'
+    updated_at timestamp default current_timestamp on update current_timestamp comment '수정일시'
 ) ENGINE = InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci comment = '프로필 테이블';
 
 create table if not exists tech_stack (
@@ -26,7 +26,7 @@ create table if not exists tech_stack (
     proficiency varchar(20) not null comment '숙련도',
     years_of_exp int not null default 0 comment '경험 연수',
     created_at timestamp default current_timestamp comment '생성 일시',
-    updated_at timestamp default current_timestamp comment '수정 일시',
+    updated_at timestamp default current_timestamp on update current_timestamp comment '수정 일시',
     foreign key (profile_id) references profile(id) on delete cascade
 ) ENGINE = InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci comment = '테크 스택 테이블';
 

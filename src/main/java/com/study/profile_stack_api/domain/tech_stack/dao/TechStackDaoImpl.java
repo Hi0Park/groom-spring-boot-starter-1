@@ -96,7 +96,8 @@ public class TechStackDaoImpl implements TechStackDao{
                 techStack.getName(),
                 techStack.getCategory().name(),
                 techStack.getProficiency().name(),
-                techStack.getYearsOfExp());
+                techStack.getYearsOfExp(),
+                techStack.getId());
 
         if (updated == 0) {
             throw new RuntimeException("TechStack not found: " + techStack.getId());
