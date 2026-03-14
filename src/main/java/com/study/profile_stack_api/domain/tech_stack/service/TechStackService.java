@@ -9,6 +9,7 @@ import com.study.profile_stack_api.domain.tech_stack.dto.response.TechStackRespo
 import com.study.profile_stack_api.domain.tech_stack.entity.Category;
 import com.study.profile_stack_api.domain.tech_stack.entity.Proficiency;
 import com.study.profile_stack_api.domain.tech_stack.entity.TechStack;
+import com.study.profile_stack_api.global.common.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TechStackService {
     private final TechStackDao techStackDao;
+    private static final int MAX_PAGE_SIZE = 100;
+
     // Create
     public TechStackResponse createTechStack(TechStackCreateRequest request, Long profileId) {
         validationCreateRequest(request, profileId);
@@ -41,19 +44,24 @@ public class TechStackService {
     }
 
     // Read
-    public List<TechStackResponse> getAllTechStacks(Long profileId) {
-        List<TechStack> techStacks = techStackDao.findAll(profileId);
-
-        return techStacks.stream()
-                .map(TechStackResponse::from)
-                .collect(Collectors.toList());
-    }
-
-    public TechStackResponse getTechStackById(Long profileId ,Long id) {
+    public TechStackResponse getTechStackById(Long profileId, Long id) {
         TechStack techStack = techStackDao.findTechStackById(profileId ,id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로필 번호 혹은 ID : " + profileId + ", " + id));
 
         return TechStackResponse.from(techStack);
+    }
+
+    public Page<TechStackResponse> getTechStacksWithPaging(Long profileId, int page, int size) {
+        page = Math.max(0, page);
+        size = Math.min(Math.max(1, size), MAX_PAGE_SIZE);
+
+        Page<TechStack> techStackPage = techStackDao.findAllWithPaging(profileId, page, size);
+
+        List<TechStackResponse> content = techStackPage.getContent().stream()
+                .map(TechStackResponse::from)
+                .collect(Collectors.toList());
+
+        return new Page<>(content, page, size, techStackPage.getTotalElements());
     }
 
     // Update

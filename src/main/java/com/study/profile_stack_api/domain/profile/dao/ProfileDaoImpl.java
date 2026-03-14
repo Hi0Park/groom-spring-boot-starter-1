@@ -2,6 +2,9 @@ package com.study.profile_stack_api.domain.profile.dao;
 
 import com.study.profile_stack_api.domain.profile.entity.Position;
 import com.study.profile_stack_api.domain.profile.entity.Profile;
+import com.study.profile_stack_api.domain.profile.exception.ResourceNotFoundException;
+import com.study.profile_stack_api.global.common.Page;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,18 +34,22 @@ public class ProfileDaoImpl implements ProfileDao {
                 values (?, ?, ?, ?, ?, ?, ?)
                 """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
+        try {
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, profile.getName());
+                ps.setString(2, profile.getEmail());
+                ps.setString(3, profile.getBio());
+                ps.setString(4, profile.getPosition().name());
+                ps.setInt(5, profile.getCareerYears());
+                ps.setString(6, profile.getGithubUrl());
+                ps.setString(7, profile.getBlogUrl());
+                return ps;
+            }, keyHolder);
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, profile.getName());
-            ps.setString(2, profile.getEmail());
-            ps.setString(3, profile.getBio());
-            ps.setString(4, profile.getPosition().name());
-            ps.setInt(5, profile.getCareerYears());
-            ps.setString(6, profile.getGithubUrl());
-            ps.setString(7, profile.getBlogUrl());
-            return ps;
-        }, keyHolder);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
+        }
 
         Number generatedId = keyHolder.getKey();
 
@@ -50,13 +58,6 @@ public class ProfileDaoImpl implements ProfileDao {
         }
 
         return profile;
-    }
-
-    @Override
-    public List<Profile> findAll() {
-        String sql = "select * from profile order by id desc";
-
-        return jdbcTemplate.query(sql, profileRowMapper);
     }
 
     @Override
@@ -105,9 +106,16 @@ public class ProfileDaoImpl implements ProfileDao {
                 profile.getId());
 
         if (updated == 0) {
-            throw new RuntimeException("Profile not found: " + profile.getId());
+            throw new ResourceNotFoundException(profile.getId());
         }
 
+        sql = """
+            select updated_at
+            from profile
+            where id = ?
+            """;
+        LocalDateTime updatedAt = jdbcTemplate.queryForObject(sql, LocalDateTime.class, profile.getId());
+        profile.setUpdatedAt(updatedAt);
         return profile;
     }
 
@@ -124,6 +132,28 @@ public class ProfileDaoImpl implements ProfileDao {
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
 
         return count != null && count > 0;
+    }
+
+    @Override
+    public Page<Profile> findAllWithPaging(int page, int size) {
+        String countSql = "select count(*) from profile";
+        Long totalElements = jdbcTemplate.queryForObject(countSql, Long.class);
+
+        if (totalElements == null || totalElements == 0) {
+            return new Page<>(List.of(), page, size, 0);
+        }
+
+        String dataSql = """
+                select *
+                from profile
+                order by id desc
+                limit ? offset ?
+                """;
+
+        int offset = page * size;
+        List<Profile> content = jdbcTemplate.query(dataSql, profileRowMapper, size, offset);
+
+        return new Page<>(content, page, size, totalElements);
     }
 
     private final RowMapper<Profile> profileRowMapper = (rs, rowNum) -> {

@@ -3,6 +3,7 @@ package com.study.profile_stack_api.domain.tech_stack.dao;
 import com.study.profile_stack_api.domain.tech_stack.entity.Category;
 import com.study.profile_stack_api.domain.tech_stack.entity.Proficiency;
 import com.study.profile_stack_api.domain.tech_stack.entity.TechStack;
+import com.study.profile_stack_api.global.common.Page;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,6 +24,8 @@ public class TechStackDaoImpl implements TechStackDao{
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // TODO: RowNumber 적용하는 방법을 알아내고 수정할 것
+    // 일단 임시로 ID를 이용하게끔 설정
     @Override
     public TechStack save(TechStack techStack) {
         String sql = """
@@ -54,19 +57,7 @@ public class TechStackDaoImpl implements TechStackDao{
     }
 
     @Override
-    public List<TechStack> findAll(Long profileId) {
-        String sql = """
-                select *
-                from tech_stack
-                where profile_id = ?
-                order by id desc
-                """;
-
-        return jdbcTemplate.query(sql, techStackRowMapper, profileId);
-    }
-
-    @Override
-    public Optional<TechStack> findTechStackById(Long profileId ,Long id) {
+    public Optional<TechStack> findTechStackById(Long profileId, Long id) {
         String sql = """
                 select *
                 from tech_stack
@@ -83,8 +74,7 @@ public class TechStackDaoImpl implements TechStackDao{
 
     @Override
     public TechStack update(TechStack techStack) {
-        // TODO: RowNumber 적용하는 방법을 알아내고 수정할 것
-        // 일단 임시로 ID를 이용하게끔 설정
+
         String sql = """
                 update tech_stack
                 set name = ?, category = ?, proficiency = ?,
@@ -126,6 +116,34 @@ public class TechStackDaoImpl implements TechStackDao{
                 """;
         int deleted = jdbcTemplate.update(sql, id);
         return deleted > 0;
+    }
+
+    @Override
+    public Page<TechStack> findAllWithPaging(Long profileId, int page, int size) {
+        String countSql = """
+                select count(*)
+                from tech_stack
+                where profile_id = ?
+                """;
+
+        Long totalElements = jdbcTemplate.queryForObject(countSql, Long.class, profileId);
+
+        if (totalElements == null || totalElements == 0) {
+            return new Page<>(List.of(), page, size, 0);
+        }
+
+        String dataSql = """
+                select *
+                from tech_stack
+                where profile_id = ?
+                order by id desc
+                limit ? offset ?
+                """;
+
+        int offset = page * size;
+        List<TechStack> content = jdbcTemplate.query(dataSql, techStackRowMapper, profileId, size, offset);
+
+        return new Page<>(content, page, size, totalElements);
     }
 
     public RowMapper<TechStack> techStackRowMapper = (rs, rowNum) -> {

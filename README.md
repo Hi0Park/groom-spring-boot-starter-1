@@ -239,9 +239,9 @@ curl -X POST http://localhost:8080/api/v1/profiles/1/tech-stacks \
 - [ ] 기술 스택 필터링 구현 -> 특정 Profile에서 TeckStack을 필터링 해야하는건지..?
 
 ### Phase 6: 어노테이션 기반 코드 최적화 (Lombok)
-- [ ] build.gradle에 Lombok 및 MapStruct 의존성 추가
-- [ ] Profile, TechStack 엔티티의 Getter/Setter, 생성자 제거 및 @Getter, @NoArgsConstructor(access = AccessLevel.PROTECTED) 등 적용
-- [ ] 모든 DTO에 @Getter, @Builder, @AllArgsConstructor 적용으로 보일러플레이트 코드 제거
+- [x] build.gradle에 Lombok 및 MapStruct 의존성 추가
+- [x] Profile, TechStack 엔티티의 Getter/Setter, 생성자 제거 및 @Getter 등 적용
+- [x] 모든 DTO에 @Getter, @Builder, @AllArgsConstructor 적용으로 보일러플레이트 코드 제거
 - [ ] 컨트롤러 및 서비스 레이어에 @Slf4j 적용하여 로그 시스템 통합
 
 ### Phase 7: 선언적 유효성 검증 (Bean Validation)

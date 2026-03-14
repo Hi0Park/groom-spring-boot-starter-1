@@ -6,6 +6,7 @@ import com.study.profile_stack_api.domain.profile.dto.response.ProfileDeleteResp
 import com.study.profile_stack_api.domain.profile.dto.response.ProfileResponse;
 import com.study.profile_stack_api.domain.profile.service.ProfileService;
 import com.study.profile_stack_api.global.common.ApiResponse;
+import com.study.profile_stack_api.global.common.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +27,6 @@ public class ProfileController {
         ProfileResponse profileResponse = profileService.createProfile(request); // service의 create 구현
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(profileResponse));
-    }
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<ProfileResponse>>> getAllProfiles() {
-        List<ProfileResponse> profileResponses = profileService.getAllProfiles();
-
-        return ResponseEntity.ok()
-                .body(ApiResponse.success(profileResponses));
     }
 
     @GetMapping("/{id}")
@@ -71,6 +64,17 @@ public class ProfileController {
 
         return ResponseEntity.ok()
                 .body(ApiResponse.success(response));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<ProfileResponse>>> getProfilesPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<ProfileResponse> responses = profileService.getProfilesWithPaging(page, size);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(responses));
     }
 
 }

@@ -6,6 +6,7 @@ import com.study.profile_stack_api.domain.tech_stack.dto.response.TechStackDelet
 import com.study.profile_stack_api.domain.tech_stack.dto.response.TechStackResponse;
 import com.study.profile_stack_api.domain.tech_stack.service.TechStackService;
 import com.study.profile_stack_api.global.common.ApiResponse;
+import com.study.profile_stack_api.global.common.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,17 @@ import java.util.List;
 public class TechStackController {
     private final TechStackService techStackService;
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<TechStackResponse>>> getTechStacksWithPaging(
+            @PathVariable Long profileId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<TechStackResponse> responsePage = techStackService.getTechStacksWithPaging(profileId, page, size);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(responsePage));
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<TechStackResponse>> createTechStack(
             @RequestBody TechStackCreateRequest request,
@@ -29,15 +41,6 @@ public class TechStackController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response));
-    }
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<TechStackResponse>>> getAllTechStacks(
-            @PathVariable Long profileId) {
-        List<TechStackResponse> responses = techStackService.getAllTechStacks(profileId);
-
-        return ResponseEntity.ok()
-                .body(ApiResponse.success(responses));
     }
 
     @GetMapping("/{id}")

@@ -8,6 +8,8 @@ import com.study.profile_stack_api.domain.profile.dto.response.ProfileResponse;
 import com.study.profile_stack_api.domain.profile.entity.Position;
 import com.study.profile_stack_api.domain.profile.entity.Profile;
 import com.study.profile_stack_api.domain.profile.exception.ResourceNotFoundException;
+import com.study.profile_stack_api.domain.profile.mapper.ProfileMapper;
+import com.study.profile_stack_api.global.common.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,50 +22,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ProfileService {
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int MAX_PAGE_SIZE = 100;
     private final ProfileDao profileDao;
+    private final ProfileMapper profileMapper;
 
     // Create
     public ProfileResponse createProfile(ProfileCreateRequest request) {
         validationCreateRequest(request);
 
-        Profile profile = Profile.builder()
-                .id(null)
-                .name(request.getName())
-                .email(request.getEmail())
-                .bio(request.getBio())
-                .position(Position.valueOf(request.getPosition().toUpperCase()))
-                .careerYears(request.getCareerYears())
-                .githubUrl(request.getGithubUrl())
-                .blogUrl(request.getBlogUrl())
-                .build();
+        Profile profile = profileMapper.toEntity(request);
 
         Profile savedProfile = profileDao.save(profile);
-        return ProfileResponse.from(savedProfile);
+        return profileMapper.toResponse(savedProfile);
     }
 
     // Read
-    public List<ProfileResponse> getAllProfiles() {
-        List<Profile> profiles = profileDao.findAll();
-
-        return profiles.stream()
-                .map(ProfileResponse::from)
-                .collect(Collectors.toList());
-    }
-
     public ProfileResponse getProfilesById(Long id) {
         Profile profile = profileDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID : " + id));
 
-        return ProfileResponse.from(profile);
+        return profileMapper.toResponse(profile);
     }
 
 
     public List<ProfileResponse> getProfilesByPosition(String position) {
         List<Profile> profiles = profileDao.findByPosition(position);
 
-        return profiles.stream()
-                .map(ProfileResponse::from)
-                .collect(Collectors.toList());
+        return profileMapper.toResponseList(profiles);
     }
 
     // Update
@@ -80,28 +66,10 @@ public class ProfileService {
 
         validationUpdateRequest(request);
 
-        Position position = null;
-
-        if(request.getPosition() != null) {
-            try {
-                position = Position.valueOf(request.getPosition().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("유효하지 않은 직무입니다");
-            }
-        }
-
-        profile.update(
-                request.getName(),
-                request.getEmail(),
-                request.getBio(),
-                position,
-                request.getCareerYears(),
-                request.getGithubUrl(),
-                request.getBlogUrl()
-        );
+        profileMapper.updateEntityFromRequest(request, profile);
 
         Profile updatedProfile = profileDao.update(profile);
-        return ProfileResponse.from(updatedProfile);
+        return profileMapper.toResponse(updatedProfile);
     }
 
     // Delete
@@ -115,6 +83,19 @@ public class ProfileService {
         return ProfileDeleteResponse.of(id);
     }
 
+    public Page<ProfileResponse> getProfilesWithPaging(int page, int size) {
+        page = Math.max(0, page);
+        size = Math.min(Math.max(1, size), MAX_PAGE_SIZE);
+
+        Page<Profile> profilePage = profileDao.findAllWithPaging(page, size);
+
+        List<ProfileResponse> content = profilePage.getContent().stream()
+                .map(ProfileResponse::from)
+                .collect(Collectors.toList());
+
+        return new Page<>(content, page, size, profilePage.getTotalElements());
+    }
+
     // validation
     public void validationCreateRequest(ProfileCreateRequest request) {
         if (request.getName() == null || request.getName().trim().isEmpty()) {
@@ -126,7 +107,7 @@ public class ProfileService {
         if (request.getPosition() == null || request.getPosition().trim().isEmpty()) {
             throw new IllegalArgumentException("직무는 공백일 수 없습니다.");
         }
-        if (request.getCareerYears() < 0 || request.getCareerYears() > 100) {
+        if (request.getCareerYears() == null || request.getCareerYears() < 0 || request.getCareerYears() > 100) {
             throw new IllegalArgumentException("올바른 경력 연차를 입력해주세요.");
         }
     }
@@ -141,7 +122,7 @@ public class ProfileService {
         if (request.getPosition() != null && request.getPosition().trim().isEmpty()) {
             throw new IllegalArgumentException("직무는 공백일 수 없습니다.");
         }
-        if (request.getCareerYears() < 0 || request.getCareerYears() > 100) {
+        if (request.getCareerYears() != null && (request.getCareerYears() < 0 || request.getCareerYears() > 100)) {
             throw new IllegalArgumentException("올바른 경력 연차를 입력해주세요.");
         }
     }

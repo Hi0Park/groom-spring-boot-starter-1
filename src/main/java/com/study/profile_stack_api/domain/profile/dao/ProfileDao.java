@@ -1,6 +1,7 @@
 package com.study.profile_stack_api.domain.profile.dao;
 
 import com.study.profile_stack_api.domain.profile.entity.Profile;
+import com.study.profile_stack_api.global.common.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,6 @@ public interface ProfileDao {
     Profile save(Profile profile);
 
     // Read
-    List<Profile> findAll();
     Optional<Profile> findById(Long id);
     List<Profile> findByPosition(String position);
 
@@ -26,4 +26,5 @@ public interface ProfileDao {
 
     // Paging
     // TODO : Paging 구현
+    Page<Profile> findAllWithPaging(int page, int size);
 }

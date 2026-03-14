@@ -26,7 +26,9 @@ spring:
   sql:
     init:
       mode: always
-      platform: mysql
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+      # platform: mysql
       encoding: UTF-8
 
 logging:
@@ -35,3 +37,10 @@ logging:
     com.study.my_spring_study_diary: DEBUG
     org.springframework.jdbc: DEBUG
     com.zaxxer.hikari: DEBUG
+
+discord:
+  webhook:
+    url: ${DISCORD_WEBHOOK_URL:https://discord.com/api/webhooks/1481268563833524278/qHSjGhwqXp3Lxq0Q7H8Cumtxhy-5cjazIbdZznBJ2wLjsa8p3RwPaFOgLRr224T1BdSB}
+    enabled: ${DISCORD_WEBHOOK_ENABLED:false}
+    username: Study Log Bot
+    avatar-url: <https://i.imgur.com/AfFp7pu.png>

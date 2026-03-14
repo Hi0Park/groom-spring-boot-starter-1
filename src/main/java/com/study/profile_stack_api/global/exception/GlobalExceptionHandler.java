@@ -3,6 +3,8 @@ package com.study.profile_stack_api.global.exception;
 import com.study.profile_stack_api.domain.profile.exception.ResourceNotFoundException;
 import com.study.profile_stack_api.global.common.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.h2.api.ErrorCode;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,6 +51,14 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest()
                 .body(ApiResponse.error("INVALID_ARGUMENT", e.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateKey(DuplicateKeyException e) {
+        log.warn("중복 키 발생 : {}", e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error("DUPLICATE_RESOURCE", e.getMessage()));
     }
 
     // !! 전역 에러 처리. 상단에서 Handler 작성할 것 !!

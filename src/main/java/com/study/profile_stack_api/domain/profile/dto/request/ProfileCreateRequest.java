@@ -11,7 +11,7 @@ public class ProfileCreateRequest {
     private String email;
     private String bio;
     private String position;
-    private int careerYears;
+    private Integer careerYears;
     private String githubUrl;
     private String blogUrl;
 }
